@@ -348,7 +348,6 @@ class Attention(nn.Module):
         return self.to_out(out)
 
 
-#!----------------------------------------------------------------------------------------
 def compute_cvloss(gates):
     # 鼓励所有专家被均匀地使用，通过计算专家使用率的方差除以均值的平方来反映专家使用分布的均匀性。
     expert_usage = gates
@@ -383,8 +382,6 @@ class MLP(nn.Module):
         return x + residual
 
 
-## Experts实际上是多个linear，只是优化了forward的计算
-# 主要是把token选择了哪些专家，转换为专家被哪些token选择，需要计算哪些token的输出，方便矩阵运算
 class Experts(nn.Module):
     def __init__(self, input_size, output_size, num_experts, bias=True):
         super().__init__()
@@ -416,9 +413,7 @@ class Experts(nn.Module):
         """
         inputs: [batch_size * length * k, dim]
         """
-        # 根据专家选择对输入进行划分
         input_list = torch.split(inputs, expert_size.tolist(), dim=0)
-        # 存储每个专家的输出
         output_list = []
 
         for i in range(self.num_experts):
@@ -440,18 +435,14 @@ def compute_gating(k: int, logits: torch.Tensor, top_k_gates: torch.Tensor, top_
     top_k_gates: [batch_size * length, k]
     top_k_indices: [batch_size * length, k]
     """
-    # 门控矩阵，主要用于后续的辅助loss的计算，以及最终的可视化
     gates = torch.zeros_like(logits)
     gates.scatter_(1, top_k_indices, top_k_gates)
 
-    # 计算每个专家被选中的次数，即每个专家要处理的tokens数量
     expert_size = (gates > 0).sum(dim=0)
 
-    # 获取非零的 gates 和对应的专家索引
     nonzero_gates = top_k_gates[top_k_gates != 0]
     nonzero_experts = top_k_indices[top_k_gates != 0]
 
-    # 合并专家索引和对应的 batch 索引
     sorted_experts, sorted_indices = nonzero_experts.sort()
     batch_index = sorted_indices.div(k, rounding_mode="trunc")
     batch_gates = nonzero_gates[sorted_indices]
@@ -467,7 +458,6 @@ class SpeciesMoE(nn.Module):
         self.num_experts = num_experts
         self.k = topk
 
-        # 门控
         self.noisy_gating = noisy_gating
         output_dim = 2 * num_experts if noisy_gating else num_experts  # 如果使用噪声门控，就需要生成对应噪声，所以output_dim需要乘以2
         self.gates = nn.ModuleDict({
@@ -475,7 +465,6 @@ class SpeciesMoE(nn.Module):
             for k in species
         })
 
-        # 专家
         self.layer_norm = nn.LayerNorm(dim)
         self.input = Experts(dim, dim * 2, num_experts)
         self.dropout1 = nn.Dropout(dropout_rate)
@@ -511,13 +500,6 @@ class SpeciesMoE(nn.Module):
         batch_size, length, dim = x.shape
         x = x.view(batch_size * length, dim)
         expert_size, batch_index, batch_gates, gates, zloss, cvloss = self.top_k_gating(x, species)
-        #! expert_size: 每个专家被选中的次数，即每个专家要处理的tokens数量，shape为[num_experts]，sum(expert_size) = batch_size * length * k
-        #! batch_index: tokens按照专家选择的顺序排列后的索引，通过batch_index扩充x，shape为[batch_size * length * k]
-            # 比如，4个专家3个token，token0选择了专家1,2,3，token1选择了专家2,3,4，token2选择了专家1,2,4，那么batch_index=[0,2,0,1,2,0,1,1,2]
-            # 通过x[batch_index]将输入扩充，然后会在Experts类内部按expert_size划分，[0,2 || 0,1,2 || 0,1 || 1,2]，计算每个专家的输出
-        #! batch_gates: 对应batch_index的gate值，shape为[batch_size * length * k]
-        #! gates: 每个专家被选中的概率，shape为[num_experts]，用于后续的辅助loss的计算，以及最终的可视化
-        #! zloss和cvloss都是辅助损失，用于优化门控网络的选择和专家的使用
 
         x = self.layer_norm(x)
         inputs = x[batch_index]                                         # inputs: [batch_size * length * k, dim]
@@ -593,9 +575,7 @@ class TransformerModel(nn.Module):
         )
         transformer = []
         for i in range(config.depth):
-            # use_moe = False
-            # if config.moe == "moe":  # 如果使用MoE，交替
-            #     use_moe = (i % 2 == 0)
+            
             use_moe = "species" in config.moe
             transformer.append(TransformerBlock(config, species, use_tf_gamma, use_moe))
         self.transformer = nn.ModuleList(transformer)
@@ -616,11 +596,7 @@ class TransformerModel(nn.Module):
 
 
 class TracksMoE(nn.Module):
-    """
-    对于Tracks目前是分为了4大类，我调用语言模型的api对target的说明文档标注了一下类别，然后根据类别把文档重排了一下
-    其实只是TF ChIP-seq和Histone ChIP-seq说明文档中混在了一起。
-    然后按照重排之后的index，把预测结果的5313或1643重排，用以分开tracks
-    """
+
     TRACK_TYPES = ["DNASE/ATAC", "TF ChIP-seq", "Histone ChIP-seq", "CAGE"]
 
     def __init__(self, config, species, topk: int = 3, seqlen: int = 896):
@@ -713,7 +689,7 @@ class TracksMoE(nn.Module):
         gate_logits = self.gate_selector(x_pooled)              # gate_logits:(batch_size, gates_num)
         embedding_logits = self.embedding_gate_selector(embedding.squeeze(1))    # embedding_logits:(batch_size, gates_num)
 
-        residual = out        #? 如果使用原本的loss和增强后的loss相加，那这里是不是没必要加残差了？
+        residual = out        
         out = rearrange(out, "b n d -> b d n")  # 转置
 
         batch_size, tracks, seqlen = out.shape
@@ -728,19 +704,15 @@ class TracksMoE(nn.Module):
         for i, t in enumerate(self.TRACK_TYPES):
             task = f"{species} {t}"
             start, end = types_index[task]
-            #? 感觉这里添加任务embedding是不是有必要？但是我还没做过这里的实验
-            temp = out[:, start:end, :] + self.tracks_embedding[t]  # 添加任务embedding
-            # 对于不同的track，计算 gates和辅助损失
+            
+            temp = out[:, start:end, :] + self.tracks_embedding[t]  
             gates, zloss, cvloss, weights = self._compute_gates(temp, gate_logits, embedding_logits, i, batch_size)
-            #! gates:(bs, temp_tracks, num_experts), temp_tracks是当前track类型的数量
-            #! weights:(gates_per_type)，表示每个gate的权重，这里返回用于观察结果
             total_zloss = total_zloss + zloss
             total_cvloss = total_cvloss + cvloss
             gates_list.append(gates)
             weights_list.append(weights.detach())
 
-        #! 这里将所有gate拼接一起处理，避免更多显式的循环
-        #! 之后就类似SpeciesMoE的处理了
+
         gates = torch.cat(gates_list, dim=1).view(batch_size * tracks, self.num_experts)
         weights = torch.cat(weights_list, dim=1)
 
@@ -801,16 +773,11 @@ class TracksMoE(nn.Module):
         return gates, zloss, cvloss, weights
 
     def _get_batch_index(self, gates):
-        """
-        获取非零 gates 的索引和对应的 batch 索引。
-        """
-        # 获取非零的 gates 和对应的专家索引
-        batch_indices, expert_indices = torch.nonzero(gates, as_tuple=True)  # 获取非零 gates 的索引
-        nonzero_gates = gates[batch_indices, expert_indices]  # 提取非零 gates 的值
+        batch_indices, expert_indices = torch.nonzero(gates, as_tuple=True)  
+        nonzero_gates = gates[batch_indices, expert_indices]  
 
-        # 合并专家索引和对应的 batch 索引
-        sorted_experts, sorted_indices = expert_indices.sort()  # 按专家索引排序，返回排序后的专家索引和排序顺序
-        batch_index = batch_indices[sorted_indices]  # 按排序顺序重新排列对应的批次索引
-        batch_gates = nonzero_gates[sorted_indices]  # 按排序顺序重新排列 gates 的值
+        sorted_experts, sorted_indices = expert_indices.sort()  
+        batch_index = batch_indices[sorted_indices]  
+        batch_gates = nonzero_gates[sorted_indices]  
         return batch_index, batch_gates
 
