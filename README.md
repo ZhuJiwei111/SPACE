@@ -2,19 +2,18 @@
 
 This is the official implementation of the ICML 2025 poster paper "SPACE: Your Genomic Profile Predictor is a Powerful DNA Foundation Model".
 
-## Environment Setup
+# Environment Setup
 
-Key Package Version
+You can create a conda environment using the provided `environment.yml` file to ensure all dependencies are properly installed:
 
 ```bash
-torch==2.1.1
-transformers==4.45.2
+conda env create -f environment.yml
+conda activate space
 ```
-TBD
 
 ## Dataset
 
-We utilize the dataset from [Basenji](https://console.cloud.google.com/storage/browser/basenji_barnyard), which is originally in TensorFlow data format and requires users to pay for download costs. We have converted the data to H5 format and made it freely available for download on Hugging Face.
+We utilize the dataset from [Basenji](https://console.cloud.google.com/storage/browser/basenji_barnyard), which is originally in TensorFlow data format and requires users to pay for download costs. We have converted the data to H5 format and made it freely available for download on Hugging Face
 
 TBD
 

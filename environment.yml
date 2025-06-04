@@ -1,4 +1,4 @@
-name: enformer
+name: space
 channels:
   - bioconda
   - pytorch
