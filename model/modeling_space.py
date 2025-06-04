@@ -225,6 +225,15 @@ class Space(PreTrainedModel):
             "tracks": tracks_statistics,
         }
 
+    @classmethod
+    def from_pretrained(cls, model_name_or_path, *model_args, **kwargs):
+        """
+        Load a pretrained model from a given path.
+        """
+        model = TrainingSpace.from_pretrained(model_name_or_path, *model_args, **kwargs)
+        space = model.model
+        return space
+
 
 class TrainingSpace(PreTrainedModel):
     def __init__(self, config):
