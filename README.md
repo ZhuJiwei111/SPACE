@@ -20,18 +20,15 @@ TBD
 
 # Pre-trained Model
 
-We have uploaded our model configuration and weight files to Hugging Face Hub at: https://huggingface.co/yangyz1230/space
-
-## Loading the Model
-
-You can easily load the pre-trained model weights from Hugging Face Hub using the following method:
+We have uploaded our model config and weights to Hugging Face Hub at: https://huggingface.co/yangyz1230/space.
+You can easily load the pre-trained model using the following code:
 
 ```python
 from model.modeling_space import Space
 
 model_name_or_path = "yangyz1230/space"
 model = Space.from_pretrained(model_name_or_path)
-
+```
 ## Pre-training
 
 TBD
@@ -49,4 +46,12 @@ Our implementation is based on [Enformer-Pytorch](https://github.com/lucidrains/
 If you find our work or code helpful, please cite:
 
 ```bibtex
-TBD
+@misc{yang2025spacegenomicprofilepredictor,
+      title={SPACE: Your Genomic Profile Predictor is a Powerful DNA Foundation Model}, 
+      author={Zhao Yang and Jiwei Zhu and Bing Su},
+      year={2025},
+      eprint={2506.01833},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2506.01833}, 
+}
