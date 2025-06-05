@@ -39,7 +39,7 @@ Our implementation is based on [Enformer-Pytorch](https://github.com/lucidrains/
 
 ## Citation
 
-If you find our work or code helpful, please cite:
+If you find our work, code or released data helpful, please cite:
 
 ```bibtex
 @misc{yang2025spacegenomicprofilepredictor,
