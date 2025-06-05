@@ -13,7 +13,7 @@ conda activate space
 
 ## Dataset
 
-We utilize the dataset from [Basenji](https://console.cloud.google.com/storage/browser/basenji_barnyard), which is originally in TensorFlow data format and requires users to pay for download costs. We have converted the data to H5 format and made it freely available for download on Hugging Face
+We utilize the dataset from [Basenji](https://console.cloud.google.com/storage/browser/basenji_barnyard), which is originally in TensorFlow data format and requires users to pay for download costs. We have converted the data to H5 format and made it freely available for download on Hugging Face: https://huggingface.co/datasets/yangyz1230/space/tree/main.
 
 TBD
 
