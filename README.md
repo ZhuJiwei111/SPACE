@@ -23,6 +23,7 @@ You can easily load the pre-trained model using the following code:
 from model.modeling_space import Space
 model_name_or_path = "yangyz1230/space"
 model = Space.from_pretrained(model_name_or_path)
+```
 
 ## Pre-training
 
