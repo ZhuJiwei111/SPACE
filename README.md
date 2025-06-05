@@ -1,4 +1,4 @@
-# SPACE
+# 🧬 SPACE 
 
 This is the official implementation of the ICML 2025 poster paper "SPACE: Your Genomic Profile Predictor is a Powerful DNA Foundation Model".
 
