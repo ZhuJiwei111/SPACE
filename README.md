@@ -27,11 +27,20 @@ model = Space.from_pretrained(model_name_or_path)
 
 ## Pre-training
 
-TBD
+You can train a SPACE model from scratch:
+```
+bash train.sh
+```
 
 ## Downstream Tasks
 
-TBD
+We provide code for reproducing downstream tasks in the folder `experiments\`.
+
+For example, to reproduce NT benchmark's results, you can follow these commands:
+```
+cd experiments/NT
+bash expr_NT.sh
+```
 
 ## Acknowledgments
 
