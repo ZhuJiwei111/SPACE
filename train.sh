@@ -32,7 +32,7 @@ fi
 export OMP_NUM_THREADS=1
 
 unset WANDB_RUN_ID
-export WANDB_API_KEY="66a051adfe75ea4635ddf96f876e6d39e2e0b4b0"
+export WANDB_API_KEY="YOUR WANDB API KEY"
 export WANDB_PROJECT="temp"
 export WANDB_DIR="./wandb"
 
