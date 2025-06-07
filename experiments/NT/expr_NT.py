@@ -73,12 +73,6 @@ class FintuneModel(nn.Module):
             state_dict = torch.load(os.path.join(model_path, "pytorch_model.bin"))
             model.load_state_dict(state_dict)
             self.model = model.model
-            #! 使用随机species embedding和gate
-            # self.model.transformer.species_embedding["human"] = nn.Parameter(torch.randn(1, 1, config.dim))
-            # for block in self.model.transformer.transformer:
-            #     block.feed_forward.gates["human"] = nn.Sequential(
-            #         nn.Linear(config.dim, config.species_num_experts), nn.LeakyReLU()
-            #     )
         
         self.fc = nn.Linear(config.dim * 2, num_labels)
         self.loss = nn.CrossEntropyLoss()
