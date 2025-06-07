@@ -38,8 +38,7 @@ We provide code for reproducing downstream tasks in the folder `experiments\`.
 
 For example, to reproduce NT benchmark's results, you can follow these commands:
 ```
-cd experiments/NT
-bash expr_NT.sh
+bash experiments/NT/expr_NT.sh
 ```
 
 ## Acknowledgments
