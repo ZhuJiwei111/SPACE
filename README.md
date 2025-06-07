@@ -34,9 +34,12 @@ bash train.sh
 
 ## Downstream Tasks
 
-We provide code for reproducing downstream tasks in the folder `experiments\`.
+We provide code for reproducing downstream tasks in the folder `experiments\`. This requires ensuring your downstream task data is stored in the `datasets\` directory.
 
-For example, to reproduce NT benchmark's results, you can follow these commands:
+For example, to reproduce NT benchmark's results:
+
+1. Place the NT dataset in `datasets\NT\`
+2. Run the following commands:
 ```
 bash experiments/NT/expr_NT.sh
 ```
