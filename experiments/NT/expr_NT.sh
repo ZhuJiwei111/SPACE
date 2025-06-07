@@ -109,8 +109,7 @@ run_task_on_gpu() {
 
 
 # 主循环：遍历不同的随机种子
-# for seed in $(seq 0 9); do
-seed=42
+for seed in $(seq 0 9); do
 
     # 创建任务队列
     task_queue=$(mktemp)
