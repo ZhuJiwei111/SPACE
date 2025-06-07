@@ -131,7 +131,6 @@ for seed in $(seq 0 9); do
     fi
 
     # 启动多个后台进程，每个 GPU 一个
-    GPUS=4
     for ((gpu_id=0; gpu_id<GPUS; gpu_id++)); do
         run_task_on_gpu $gpu_id "$task_queue" $seed "$model_name_or_path" "$output_path" "$report_to" &
     done
