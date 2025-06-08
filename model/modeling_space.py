@@ -183,8 +183,8 @@ class Space(PreTrainedModel):
         if return_only_embeddings:
             if no_batch:
                 x = rearrange(x, "() ... -> ...")
-            # return x
-            return x, species_statistics
+            return x
+            # return x, species_statistics
         
         out = self.heads[species](x)
 
