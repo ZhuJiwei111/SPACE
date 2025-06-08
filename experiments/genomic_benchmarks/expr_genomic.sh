@@ -117,12 +117,12 @@ run_task_on_gpu() {
 
 
 # 主循环：遍历不同的随机种子
-# for seed in $(seq 0 9); do
+for seed in $(seq 0 9); do
 # batch_sizes=(8 16 32)
 # learning_rates=(3e-6 8e-6 3e-5 5e-5 5e-4 8e-4)
 batch_size=32
 learning_rate=5e-5
-seed=0
+# seed=0
 # for batch_size in "${batch_sizes[@]}"; do
 #     for learning_rate in "${learning_rates[@]}"; do
         # 创建任务队列
@@ -146,7 +146,6 @@ seed=0
         fi
 
         # 启动多个后台进程，每个 GPU 一个
-        GPUS=3
         for ((gpu_id=0; gpu_id<GPUS; gpu_id++)); do
             run_task_on_gpu $gpu_id "$task_queue" $seed "$model_name_or_path" "$output_path" "$report_to" "$batch_size"  "$learning_rate" &
         done
@@ -160,6 +159,6 @@ seed=0
         # 删除任务队列文件和锁文件
         rm "$task_queue" "$task_queue.lock"
 #     done
-# done
+done
 # 汇总所有结果
 python ./result.py
