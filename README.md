@@ -14,7 +14,8 @@ conda activate space
 ## Dataset
 We utilize the dataset from [Basenji](https://console.cloud.google.com/storage/browser/basenji_barnyard), which is originally in TensorFlow data format and requires users to pay for download costs. We have converted the data to H5 format and made it freely available for download on 🤗 Hugging Face: https://huggingface.co/datasets/yangyz1230/space.
 
-TBD: Since the dataset is very large, the upload work is still in process.
+**Update**:
+Due to potential difficulties with H5 format data in supporting parallel data loading, we have prepared a new format where each sample's genomic profile is stored as individual NumPy (.npy) files. We will upload these soon （https://huggingface.co/datasets/yangyz1230/space_npy）and provide the corresponding dataset implementation. (In fact, converting from H5 to .npy format is quite straightforward - if your training is bottlenecked by data loading, you may also try converting the data yourself first.)
 
 ## Pre-trained Model
 We have uploaded our model config and weights to 🤗 Hugging Face Hub at: https://huggingface.co/yangyz1230/space.
