@@ -14,8 +14,11 @@ conda activate space
 ## Dataset
 We utilize the dataset from [Basenji](https://console.cloud.google.com/storage/browser/basenji_barnyard), which is originally in TensorFlow data format and requires users to pay for download costs. We have converted the data to H5 format and made it freely available for download on 🤗 Hugging Face: https://huggingface.co/datasets/yangyz1230/space.
 
+Note: The original data we provide is in compressed H5 format, which is not conducive to parallel data loading with dataloaders during training. We have provided preprocessing code in our repository to convert the compressed H5 format to byte streams: https://github.com/ZhuJiwei111/SPACE/blob/6fc1aee012229f7c3daab033584caa3e9d07485a/dataloaders/h5dataset.py#L120-L131. You can also convert the H5 data yourself to formats suitable for large-scale training, such as WebDataset.
+<!--,
 **Update**:
 Due to potential difficulties with H5 format data in supporting parallel data loading, we have prepared a new format where each sample's genomic profile is stored as individual NumPy (.npy) files. We will upload these soon （ https://huggingface.co/datasets/yangyz1230/space_npy ） and provide the corresponding dataset implementation. (In fact, converting from H5 to .npy format is quite straightforward - if your training is bottlenecked by data loading, you may also try converting the data yourself first.)
+-->
 
 ## Quick Start for Enformer/Borzoi Training
 
@@ -58,6 +61,15 @@ Our implementation is based on [Enformer-Pytorch](https://github.com/lucidrains/
 If you find our work, code, or released data helpful, please cite:
 
 ```bibtex
+
+@inproceedings{yang2025space,
+      title={{SPACE}: Your Genomic Profile Predictor is a Powerful {DNA} Foundation Model},
+      author={Zhao Yang and Jiwei Zhu and Bing Su},
+      booktitle={Forty-second International Conference on Machine Learning},
+      year={2025},
+      url={https://openreview.net/forum?id=o4L9y4Jetm}
+}
+
 @misc{yang2025spacegenomicprofilepredictor,
       title={SPACE: Your Genomic Profile Predictor is a Powerful DNA Foundation Model}, 
       author={Zhao Yang and Jiwei Zhu and Bing Su},
