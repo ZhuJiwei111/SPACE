@@ -20,10 +20,6 @@ Note: The original data we provide is in compressed H5 format, which is not cond
 Due to potential difficulties with H5 format data in supporting parallel data loading, we have prepared a new format where each sample's genomic profile is stored as individual NumPy (.npy) files. We will upload these soon （ https://huggingface.co/datasets/yangyz1230/space_npy ） and provide the corresponding dataset implementation. (In fact, converting from H5 to .npy format is quite straightforward - if your training is bottlenecked by data loading, you may also try converting the data yourself first.)
 -->
 
-## Quick Start for Enformer/Borzoi Training
-
-If you are specifically interested in reproducing Enformer and similar models like Borzoi with minimal setup, please refer to our simplified repository: [Enformer_Borzoi_Training_PyTorch](https://github.com/yangzhao1230/Enformer_Borzoi_Training_Pytorch). This repository provides streamlined training scripts with minimal modifications to the original Hugging Face Trainer, making it easier to get started with genomics model training.
-
 ## Pre-trained Model
 We have uploaded our model config and weights to 🤗 Hugging Face Hub at: https://huggingface.co/yangyz1230/space.
 You can easily load the pre-trained model using the following code:
@@ -32,8 +28,14 @@ from model.modeling_space import Space
 model_name_or_path = "yangyz1230/space"
 model = Space.from_pretrained(model_name_or_path)
 ```
+## Try the Genomic Profile Prediction
+We provide code for genomic profile prediction using our models in both `test_Enformer.ipynb` and `test_SPACE.ipynb`.
 
-## Pre-training
+## Quick Start for Enformer/Borzoi Training
+
+If you are specifically interested in reproducing Enformer and similar models like Borzoi with minimal setup, please refer to our simplified repository: [Enformer_Borzoi_Training_PyTorch](https://github.com/yangzhao1230/Enformer_Borzoi_Training_Pytorch). This repository provides streamlined training scripts with minimal modifications to the original Hugging Face Trainer, making it easier to get started with genomics model training.
+
+## SPACE Pre-training
 
 You can train a SPACE model from scratch:
 ```
