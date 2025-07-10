@@ -15,7 +15,7 @@ from MyTrainer import MultiLossTrainer
 
 @dataclass
 class ModelArguments:
-    model_name_or_path: str = "/home/jiwei_zhu/disk/Enformer/enformer_ckpt"
+    model_name_or_path: str = "yangyz1230/space"
     moe: str = "baseline"
     MIloss_lambda: float = 0.01
     zloss_lambda: float = 0.001
