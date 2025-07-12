@@ -29,7 +29,7 @@ model_name_or_path = "yangyz1230/space"
 model = Space.from_pretrained(model_name_or_path)
 ```
 ## Try the Genomic Profile Prediction
-We provide code for genomic profile prediction in both `test_Enformer.ipynb` and `test_SPACE.ipynb`.
+We provide code for genomic profile prediction in both `test_Enformer.ipynb` and `test_SPACE.ipynb`. Then you can visualize predicted genomic profiles throught `visulization.py`.
 
 ## Quick Start for Enformer/Borzoi Training
 
